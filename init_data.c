@@ -6,13 +6,11 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 09:20:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/26 14:38:12 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/26 15:05:59 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-
 
 static int	is_neg(t_data *data)
 {
@@ -42,9 +40,7 @@ t_data	*init_data(char **av)
 		data->meal_nb = ft_atoi(av[5]);
 	if (is_int(data->nb_philo, av[1]) || is_int(data->time_to_die, av[2])
 		|| is_int(data->time_to_eat, av[3]) || is_int(data->time_to_sleep, av[4])
-		|| (av[5] && is_int(data->meal_nb, av[5])))
-		return (printf("Arguments must be < MAX_INT\n"), NULL);
-	if (is_neg(data))
+		|| (av[5] && is_int(data->meal_nb, av[5])) || is_neg(data))
 		return (NULL);
 	data->philo = (t_philo *)malloc(sizeof(t_philo) * data->nb_philo);
 	if (!data->philo)
@@ -52,5 +48,7 @@ t_data	*init_data(char **av)
 	data->forks = (t_fork *)malloc(sizeof(t_fork) * data->nb_philo);
 	if (!data->forks)
 		return (free(data->philo), NULL);
+	if (init_forks(data) || init_philos(data))
+		return (kill_forks(data), kill_philo(data), NULL);
 	return (data);
 }

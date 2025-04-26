@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:15:23 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/26 14:03:53 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/26 15:02:06 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,7 @@ int	is_int(int nbr, char *str)
 		return (1);
 	ret = ft_strcmp(s, str);
 	free(s);
+	if (ret != 0)
+		printf("Arguments must be < MAX_INT\n");
 	return (ret);
 }
