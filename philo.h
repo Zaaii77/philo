@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/22 14:52:04 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/26 14:28:06 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,38 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
 # include <limits.h>
+# include <time.h>
+# include <sys/time.h>
 
 typedef	struct s_fork
 {
-	void			*fork;
-	struct	s_fork	*next;	
+	pthread_mutex_t	fork;
+	int				id;
 }	t_fork;
 
 typedef	struct	s_philo
 {
-	int	id;
-	int	time_sleep;
-	int	time_eat;
+	pthread_t		id;
+	t_fork			*l_fork;
+	t_fork			*r_fork;
 }	t_philo;
+
+typedef	struct	s_data
+{
+	int				nb_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				meal_nb;
+	t_philo			*philo;
+	t_fork			*forks;
+}	t_data;
+
+t_data				*init_data(char **av);
+int					ft_atoi(const char *str);
+int					is_int(int nbr, char *str);
 
 #endif
