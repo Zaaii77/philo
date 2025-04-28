@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/26 14:28:06 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/28 01:24:16 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 typedef	struct s_fork
 {
 	pthread_mutex_t	fork;
-	int				id;
 }	t_fork;
 
 typedef	struct	s_philo
