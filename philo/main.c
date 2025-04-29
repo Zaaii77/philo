@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:45:38 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/28 20:46:22 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/29 02:50:57 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	if (ac < 5)
+	if (ac < 5 || ac > 6)
 		return (printf(ARGS), 1);
 	data = init_data(av);
 	if (!data)
