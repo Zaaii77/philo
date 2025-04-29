@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/28 20:50:09 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:11:22 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define ARGS "Wrong arguments:\n./philo <amount_of_philosophers> \
 <time_to_die> <time_to_eat> <time_to_sleep> [amount_of_meals]\n"
 
+struct s_data;
+
 typedef	struct s_fork
 {
 	pthread_mutex_t	fork;
@@ -34,8 +36,12 @@ typedef	struct	s_philo
 {
 	pthread_t		id;
 	long			lst_meal;
+	int				is_dead;
+	int				meal_nb;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
+	struct	s_data	*data;
+	pthread_t		thread;
 }	t_philo;
 
 typedef	struct	s_data
@@ -56,5 +62,6 @@ int					is_int(int nbr, char *str);
 int					is_neg(t_data *data);
 long				gettime(void);
 void				kill_forks(t_data *data, int len);
+void				*routine(t_philo *philo);
 
 #endif

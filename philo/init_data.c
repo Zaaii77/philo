@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 09:20:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/29 02:55:53 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:14:55 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,28 @@
 
 static int	init_philos(t_data *data)
 {
+	int	i;
+
 	data->philo = (t_philo *)malloc(sizeof(t_fork) * data->nb_philo);
 	if (!data->philo)
 		return (kill_forks(data, data->nb_philo), 1);
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		data->philo[i].id = i + 1;
+		data->philo[i].is_dead = 0;
+		data->philo[i].lst_meal = gettime();
+		data->philo[i].r_fork = &data->forks[i];
+		data->philo[i].l_fork = &data->forks[(i + 1) % data->nb_philo];
+		if (data->philo[i].id % 2 == 0)
+		{
+			data->philo[i].l_fork = &data->forks[i];
+			data->philo[i].r_fork = &data->forks[(i + 1) % data->nb_philo];
+		}
+		data->philo[i].data = data;
+		data->philo[i].meal_nb = 0;
+		i++;
+	}
 	return (0);
 }
 
