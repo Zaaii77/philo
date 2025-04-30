@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/29 19:11:22 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/04/30 19:53:17 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef	struct	s_philo
 	pthread_t		id;
 	long			lst_meal;
 	int				is_dead;
+	int				is_eating;
 	int				meal_nb;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
@@ -47,13 +48,14 @@ typedef	struct	s_philo
 typedef	struct	s_data
 {
 	int				nb_philo;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
 	int				meal_nb;
 	long			start_time;
 	t_philo			*philo;
 	t_fork			*forks;
+	pthread_t		monitor;
 }	t_data;
 
 t_data				*init_data(char **av);
@@ -62,6 +64,8 @@ int					is_int(int nbr, char *str);
 int					is_neg(t_data *data);
 long				gettime(void);
 void				kill_forks(t_data *data, int len);
-void				*routine(t_philo *philo);
+void				*p_eat(t_philo *philo);
+void				*p_sleep(t_philo *philo);
+void				*routine(t_data *data);
 
 #endif

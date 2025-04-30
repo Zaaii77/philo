@@ -6,7 +6,7 @@
 #    By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/20 13:23:46 by lowatell          #+#    #+#              #
-#    Updated: 2025/04/29 19:26:34 by lowatell         ###   ########.fr        #
+#    Updated: 2025/04/30 09:36:07 by lowatell         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ OBJS_DIR = objs
 
 NAME = philo
 
-SRCS =	main.c init_data.c init_utils.c parsing_init_utils.c
+SRCS =	main.c init_data.c init_utils.c parsing_init_utils.c routine.c
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
