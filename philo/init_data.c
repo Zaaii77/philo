@@ -6,11 +6,38 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 09:20:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/30 09:43:17 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/02 03:26:28 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int	init_mutex(t_data *data)
+{
+	if (pthread_mutex_init(&data->dead, NULL))
+		return (kill_forks(data, data->nb_philo), free(data->philo), 1);
+	if (pthread_mutex_init(&data->meals, NULL))
+		return (kill_forks(data, data->nb_philo), free(data->philo),
+			pthread_mutex_destroy(&data->dead), 1);
+	if (pthread_mutex_init(&data->print, NULL))
+		{
+			kill_forks(data, data->nb_philo);
+			free(data->philo);
+			pthread_mutex_destroy(&data->dead);
+			pthread_mutex_destroy(&data->meals);
+			return (1);
+		}
+	if (pthread_mutex_init(&data->stop, NULL))
+		{
+			kill_forks(data, data->nb_philo);
+			free(data->philo);
+			pthread_mutex_destroy(&data->dead);
+			pthread_mutex_destroy(&data->print);
+			pthread_mutex_destroy(&data->meals);
+			return (1);
+		}
+	return (0);
+}
 
 static int	init_philos(t_data *data)
 {
@@ -74,8 +101,9 @@ t_data	*init_data(char **av)
 		|| is_int(data->time_to_eat, av[3]) || is_int(data->time_to_sleep, av[4])
 		|| (av[5] && is_int(data->meal_nb, av[5])) || is_neg(data))
 		return (NULL);
-	if (init_forks(data) || init_philos(data))
+	if (init_forks(data) || init_philos(data) || init_mutex(data))
 		return (free(data), NULL);
+	data->stop_f = 0;
 	data->start_time = gettime();
 	return (data);
 }

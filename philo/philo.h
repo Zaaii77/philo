@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/30 19:53:17 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/02 03:27:36 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ typedef	struct	s_data
 	long			time_to_sleep;
 	int				meal_nb;
 	long			start_time;
+	int				stop_f;
+	pthread_mutex_t	print;
+	pthread_mutex_t	meals;
+	pthread_mutex_t	dead;
+	pthread_mutex_t	stop;
 	t_philo			*philo;
 	t_fork			*forks;
 	pthread_t		monitor;
@@ -62,10 +67,17 @@ t_data				*init_data(char **av);
 int					ft_atoi(const char *str);
 int					is_int(int nbr, char *str);
 int					is_neg(t_data *data);
+void				is_dead(t_data *data);
 long				gettime(void);
 void				kill_forks(t_data *data, int len);
 void				*p_eat(t_philo *philo);
 void				*p_sleep(t_philo *philo);
-void				*routine(t_data *data);
+void				*routine(t_philo *data);
+void				optiusleep(long time, long start, t_philo *philo);
+int					lock_and_print(pthread_mutex_t *mutex, t_philo *philo);
+int					philo_are_dead(t_data *data);
+void				*monitoring(t_data *data);
+void				routining(t_data *data);
+int					stop_flag(t_data *data);
 
 #endif

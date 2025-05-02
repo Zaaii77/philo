@@ -6,11 +6,31 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:51:42 by lowatell          #+#    #+#             */
-/*   Updated: 2025/04/29 02:56:39 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/02 02:54:56 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	is_dead(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		if (!data->philo[i].is_dead && (gettime() - data->philo[i].lst_meal >= data->time_to_die) && !data->philo[i].is_eating)
+		{
+			pthread_mutex_lock(&data->print);
+			printf("%ld %ld died\n", (gettime() - data->start_time), data->philo[i].id);
+			pthread_mutex_unlock(&data->print);
+			pthread_mutex_lock(&data->dead);
+			data->philo[i].is_dead = 1;
+			pthread_mutex_unlock(&data->dead);
+		}
+		i++;
+	}
+}
 
 int	is_neg(t_data *data)
 {
