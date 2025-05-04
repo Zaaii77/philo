@@ -6,12 +6,12 @@
 #    By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/20 13:23:46 by lowatell          #+#    #+#              #
-#    Updated: 2025/05/04 15:37:27 by lowatell         ###   ########.fr        #
+#    Updated: 2025/05/04 23:41:48 by lowatell         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror
+CFLAGS = -g3 -Wall -Wextra -Werror -fsanitize=thread
 RM = rm -rf
 
 INCS_DIR = incs

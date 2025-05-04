@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:13:56 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/04 15:56:44 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:10:56 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,15 @@ void	*p_eat(t_philo *philo)
 
 void	*routine(t_philo *philo)
 {
-	if (philo->id % 2 != 0)
+	if (philo->id % 2 == 0)
 		usleep(philo->data->time_to_eat * 100);
 	while (!check_stop_flag(philo->data))
 	{
 		p_eat(philo);
-		if (check_stop_flag(philo->data) || philo->meal_nb == philo->data->meal_nb)
-			break ;
-		p_sleep(philo);
-		if (check_stop_flag(philo->data))
-			break ;
-		p_think(philo);
 		if (philo->meal_nb == philo->data->meal_nb)
 			break ;
+		p_sleep(philo);
+		p_think(philo);
 	}
 	return (NULL);
 }

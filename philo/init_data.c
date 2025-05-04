@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 09:20:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/04 14:59:20 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:51:15 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	init_philos(t_data *data)
 		pthread_mutex_unlock(&data->last);
 		data->philo[i].r_fork = &data->forks[i];
 		data->philo[i].l_fork = &data->forks[(i + 1) % data->nb_philo];
-		if (data->philo[i].id % 2 == 0)
+		if (data->philo[i].id % 2 != 0)
 		{
 			data->philo[i].l_fork = &data->forks[i];
 			data->philo[i].r_fork = &data->forks[(i + 1) % data->nb_philo];
