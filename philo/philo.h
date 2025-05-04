@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/05 00:14:42 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:41:36 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,6 @@ void				set_stop_flag(t_data *data, int i);
 int					check_philos(t_data *data);
 void				data_mutex(t_data *data, int i);
 void				cleanup(t_data *data);
+void				*one_case(t_philo *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:13:56 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/05 00:10:56 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:55:28 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,12 @@ void	routining(t_data *data)
 	int	i;
 
 	i = 0;
+	if (data->nb_philo == 1)
+	{
+		pthread_create(&data->philo[i].thread, NULL, (void *(*)(void *))one_case, &data->philo[i]);
+		pthread_join(data->philo[i].thread, NULL);
+		return ;
+	}
 	while (i < data->nb_philo)
 	{
 		pthread_create(&data->philo[i].thread, NULL, (void *(*)(void *))routine, &data->philo[i]);

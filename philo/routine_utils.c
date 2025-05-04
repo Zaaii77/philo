@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 01:28:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/04 23:40:02 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:32:00 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	optiusleep(long time, long start, t_philo *philo)
 {
 	while (time > (gettime() - start))
 	{
-		usleep(5);
+		usleep(500);
 		if (check_stop_flag(philo->data))
 			return ;
 	}
