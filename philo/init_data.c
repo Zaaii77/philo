@@ -6,36 +6,47 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 09:20:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/02 03:26:28 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:59:20 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	data_mutex(t_data *data, int i)
+{
+	if (i == 0)
+	{
+		data->count_init = 0;
+		data->eating_init = 0;
+		data->print_init = 0;
+		data->last_init = 0;
+		data->stop_init = 0;
+		return ;
+	}
+	if (data->count_init == 1)
+		pthread_mutex_destroy(&data->count);
+	if (data->print_init == 1)
+		pthread_mutex_destroy(&data->print);
+	if (data->last_init == 1)
+		pthread_mutex_destroy(&data->last);
+	if (data->stop_init == 1)
+		pthread_mutex_destroy(&data->stop);
+	if (data->eating_init == 1)
+		pthread_mutex_destroy(&data->eating);
+}
+
 static int	init_mutex(t_data *data)
 {
-	if (pthread_mutex_init(&data->dead, NULL))
-		return (kill_forks(data, data->nb_philo), free(data->philo), 1);
-	if (pthread_mutex_init(&data->meals, NULL))
-		return (kill_forks(data, data->nb_philo), free(data->philo),
-			pthread_mutex_destroy(&data->dead), 1);
+	if (pthread_mutex_init(&data->count, NULL))
+		return (data->count_init = 1, data_mutex(data, 1), 1);
 	if (pthread_mutex_init(&data->print, NULL))
-		{
-			kill_forks(data, data->nb_philo);
-			free(data->philo);
-			pthread_mutex_destroy(&data->dead);
-			pthread_mutex_destroy(&data->meals);
-			return (1);
-		}
+		return (data->print_init = 1, data_mutex(data, 1), 1);
 	if (pthread_mutex_init(&data->stop, NULL))
-		{
-			kill_forks(data, data->nb_philo);
-			free(data->philo);
-			pthread_mutex_destroy(&data->dead);
-			pthread_mutex_destroy(&data->print);
-			pthread_mutex_destroy(&data->meals);
-			return (1);
-		}
+		return (data->stop_init = 1, data_mutex(data, 1), 1);
+	if (pthread_mutex_init(&data->eating, NULL))
+		return (data->eating_init = 1, data_mutex(data, 1), 1);
+	if (pthread_mutex_init(&data->last, NULL))
+		return (data->last_init = 1, data_mutex(data, 1), 1);
 	return (0);
 }
 
@@ -50,8 +61,9 @@ static int	init_philos(t_data *data)
 	while (i < data->nb_philo)
 	{
 		data->philo[i].id = i + 1;
-		data->philo[i].is_dead = 0;
+		pthread_mutex_lock(&data->last);
 		data->philo[i].lst_meal = gettime();
+		pthread_mutex_unlock(&data->last);
 		data->philo[i].r_fork = &data->forks[i];
 		data->philo[i].l_fork = &data->forks[(i + 1) % data->nb_philo];
 		if (data->philo[i].id % 2 == 0)
@@ -90,6 +102,7 @@ t_data	*init_data(char **av)
 	data = (t_data *)malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
+	data_mutex(data, 0);
 	data->nb_philo = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
@@ -101,8 +114,10 @@ t_data	*init_data(char **av)
 		|| is_int(data->time_to_eat, av[3]) || is_int(data->time_to_sleep, av[4])
 		|| (av[5] && is_int(data->meal_nb, av[5])) || is_neg(data))
 		return (NULL);
-	if (init_forks(data) || init_philos(data) || init_mutex(data))
-		return (free(data), NULL);
+	if (!av[5] || !av[5][0])
+		data->meal_nb = -1;
+	if (init_mutex(data) || init_forks(data) || init_philos(data))
+		return (data_mutex(data, 1), free(data), NULL);
 	data->stop_f = 0;
 	data->start_time = gettime();
 	return (data);

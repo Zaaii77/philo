@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:13:56 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/02 03:46:12 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/04 15:56:44 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,61 @@
 
 void	*p_sleep(t_philo *philo)
 {
-	if (philo->is_dead || philo->is_eating)
+	if (check_stop_flag(philo->data))
 		return (NULL);
 	pthread_mutex_lock(&philo->data->print);
 	printf("%ld %ld is spleeping\n", (gettime() - philo->data->start_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
+	if (check_stop_flag(philo->data))
+		return (NULL);
 	optiusleep(philo->data->time_to_sleep, gettime(), philo);
-	pthread_mutex_lock(&philo->data->print);
-	printf("%ld %ld is thinking\n", (gettime() - philo->data->start_time), philo->id);
-	pthread_mutex_unlock(&philo->data->print);
 	return (NULL);
 }
 
 void	*p_eat(t_philo *philo)
 {
-	if (philo->is_dead || (philo->meal_nb == philo->data->meal_nb && philo->data->meal_nb != 0))
+	if (check_stop_flag(philo->data))
+	return (NULL);
+	if (!lock_and_print(&philo->l_fork->fork, philo))
 		return (NULL);
-	if (lock_and_print(&philo->l_fork->fork, philo))
-		lock_and_print(&philo->r_fork->fork, philo);
+	if (!lock_and_print(&philo->r_fork->fork, philo))
+		return (pthread_mutex_unlock(&philo->l_fork->fork), NULL);
+	pthread_mutex_lock(&philo->data->eating);
 	philo->is_eating = 1;
+	pthread_mutex_unlock(&philo->data->eating);
 	pthread_mutex_lock(&philo->data->print);
 	printf("%ld %ld is eating\n", (gettime() - philo->data->start_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
 	optiusleep(philo->data->time_to_eat, gettime(), philo);
-	pthread_mutex_lock(&philo->data->meals);
+	pthread_mutex_lock(&philo->data->count);
 	philo->meal_nb += 1;
-	pthread_mutex_unlock(&philo->data->meals);
+	pthread_mutex_unlock(&philo->data->count);
 	pthread_mutex_unlock(&philo->l_fork->fork);
 	pthread_mutex_unlock(&philo->r_fork->fork);
+	pthread_mutex_lock(&philo->data->eating);
 	philo->is_eating = 0;
+	pthread_mutex_unlock(&philo->data->eating);
+	pthread_mutex_lock(&philo->data->last);
 	philo->lst_meal = gettime();
+	pthread_mutex_unlock(&philo->data->last);
 	return (NULL);
 }
 
 void	*routine(t_philo *philo)
 {
-	while (!stop_flag(philo->data))
+	if (philo->id % 2 != 0)
+		usleep(philo->data->time_to_eat * 100);
+	while (!check_stop_flag(philo->data))
 	{
 		p_eat(philo);
+		if (check_stop_flag(philo->data) || philo->meal_nb == philo->data->meal_nb)
+			break ;
 		p_sleep(philo);
+		if (check_stop_flag(philo->data))
+			break ;
+		p_think(philo);
+		if (philo->meal_nb == philo->data->meal_nb)
+			break ;
 	}
 	return (NULL);
 }
@@ -68,7 +84,7 @@ void	routining(t_data *data)
 		i++;
 	}
 	i = 0;
-	pthread_create(&data->monitor, NULL, (void *(*)(void *))monitoring, &data);
+	pthread_create(&data->monitor, NULL, (void *(*)(void *))monitoring, data);
 	while (i < data->nb_philo)
 	{
 		pthread_join(data->philo[i].thread, NULL);
@@ -79,7 +95,13 @@ void	routining(t_data *data)
 
 void	*monitoring(t_data *data)
 {
-	while (!philo_are_dead(data))
-		is_dead(data);
+	while (1)
+	{
+		if (check_philos(data))
+		{
+			set_stop_flag(data, 1);
+			break ;
+		}
+	}
 	return (NULL);
 }

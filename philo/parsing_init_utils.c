@@ -6,30 +6,30 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:51:42 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/02 02:54:56 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/04 15:38:29 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	is_dead(t_data *data)
+int	is_dead(t_data *data, int i)
 {
-	int	i;
+	int	res;
 
-	i = 0;
-	while (i < data->nb_philo)
+	res = 0;
+	pthread_mutex_lock(&data->last);
+	pthread_mutex_lock(&data->eating);
+	if ((gettime() - data->philo[i].lst_meal) >= data->time_to_die && !data->philo[i].is_eating)
 	{
-		if (!data->philo[i].is_dead && (gettime() - data->philo[i].lst_meal >= data->time_to_die) && !data->philo[i].is_eating)
-		{
-			pthread_mutex_lock(&data->print);
-			printf("%ld %ld died\n", (gettime() - data->start_time), data->philo[i].id);
-			pthread_mutex_unlock(&data->print);
-			pthread_mutex_lock(&data->dead);
-			data->philo[i].is_dead = 1;
-			pthread_mutex_unlock(&data->dead);
-		}
-		i++;
+		set_stop_flag(data, 1);
+		pthread_mutex_lock(&data->print);
+		printf("%ld %ld died\n", (gettime() - data->start_time), data->philo[i].id);
+		pthread_mutex_unlock(&data->print);
+		res = 1;
 	}
+	pthread_mutex_unlock(&data->eating);
+	pthread_mutex_unlock(&data->last);
+	return (res);
 }
 
 int	is_neg(t_data *data)
@@ -65,4 +65,33 @@ void	kill_forks(t_data *data, int len)
 	}
 	free(data->forks);
 	data->forks = NULL;
+}
+
+int	check_philos(t_data *data)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	j = 0;
+	while (++i < data->nb_philo)
+	{
+		if (is_dead(data, i))
+			return (1);
+		pthread_mutex_lock(&data->count);
+		if (data->philo[i].meal_nb == data->meal_nb)
+			j++;
+		else
+			j = 0;
+		pthread_mutex_unlock(&data->count);
+	}
+	if (j == data->nb_philo)
+	{
+		set_stop_flag(data, 1);
+		pthread_mutex_lock(&data->print);
+		printf("Nice ! Each philosophers eat %d time(s) !\n", data->meal_nb);
+		pthread_mutex_unlock(&data->print);
+		return (1);
+	}
+	return (0);
 }
