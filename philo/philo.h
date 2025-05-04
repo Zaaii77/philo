@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/04 15:37:40 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 00:14:42 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef	struct s_fork
 
 typedef	struct	s_philo
 {
-	pthread_t		id;
+	long			id;
 	long			lst_meal;
 	int				is_eating;
 	int				meal_nb;
