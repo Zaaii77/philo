@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 01:28:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/05 00:32:00 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 20:33:30 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ void	*p_think(t_philo *philo)
 	if (check_stop_flag(philo->data))
 		return (NULL);
 	pthread_mutex_lock(&philo->data->print);
-	printf("%ld %ld is thinking\n", (gettime() - philo->data->start_time), philo->id);
+	printf("%ld %ld is thinking\n",
+		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
+	if (philo->id % 2 == 1)
+		usleep(500);
 	return (NULL);
 }
 
@@ -42,7 +45,7 @@ void	optiusleep(long time, long start, t_philo *philo)
 {
 	while (time > (gettime() - start))
 	{
-		usleep(500);
+		usleep(200);
 		if (check_stop_flag(philo->data))
 			return ;
 	}
@@ -52,9 +55,13 @@ int	lock_and_print(pthread_mutex_t *mutex, t_philo *philo)
 {
 	pthread_mutex_lock(mutex);
 	if (check_stop_flag(philo->data))
-		return (pthread_mutex_unlock(mutex), 0);
+	{
+		pthread_mutex_unlock(mutex);
+		return (0);
+	}
 	pthread_mutex_lock(&philo->data->print);
-	printf("%ld %ld has taken a fork\n", (gettime() - philo->data->start_time), philo->id);
+	printf("%ld %ld has taken a fork\n",
+		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
 	return (1);
 }

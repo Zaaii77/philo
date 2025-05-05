@@ -6,11 +6,11 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:48:05 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/05 00:41:36 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 20:32:58 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	PHILO_H
+#ifndef PHILO_H
 # define PHILO_H
 
 # include <stdio.h>
@@ -25,14 +25,14 @@
 # define ARGS "Wrong arguments:\n./philo <amount_of_philosophers> \
 <time_to_die> <time_to_eat> <time_to_sleep> [amount_of_meals]\n"
 
-struct s_data;
+struct	s_data;
 
-typedef	struct s_fork
+typedef struct s_fork
 {
 	pthread_mutex_t	fork;
 }	t_fork;
 
-typedef	struct	s_philo
+typedef struct s_philo
 {
 	long			id;
 	long			lst_meal;
@@ -40,18 +40,18 @@ typedef	struct	s_philo
 	int				meal_nb;
 	t_fork			*l_fork;
 	t_fork			*r_fork;
-	struct	s_data	*data;
+	struct s_data	*data;
 	pthread_t		thread;
 }	t_philo;
 
-typedef	struct	s_data
+typedef struct s_data
 {
 	int				nb_philo;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				meal_nb;
-	long			start_time;
+	long			s_time;
 	int				stop_f;
 	pthread_mutex_t	eating;
 	int				eating_init;

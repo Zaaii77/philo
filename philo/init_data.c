@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 09:20:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/04 23:51:15 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/05 20:33:09 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ t_data	*init_data(char **av)
 	if (av[5] && av[5][0])
 		data->meal_nb = ft_atoi(av[5]);
 	if (is_int(data->nb_philo, av[1]) || is_int(data->time_to_die, av[2])
-		|| is_int(data->time_to_eat, av[3]) || is_int(data->time_to_sleep, av[4])
+		|| is_int(data->time_to_eat, av[3])
+		|| is_int(data->time_to_sleep, av[4])
 		|| (av[5] && is_int(data->meal_nb, av[5])) || is_neg(data))
 		return (NULL);
 	if (!av[5] || !av[5][0])
@@ -119,6 +120,6 @@ t_data	*init_data(char **av)
 	if (init_mutex(data) || init_forks(data) || init_philos(data))
 		return (data_mutex(data, 1), free(data), NULL);
 	data->stop_f = 0;
-	data->start_time = gettime();
+	data->s_time = gettime();
 	return (data);
 }
