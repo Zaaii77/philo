@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:13:56 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/05 20:34:09 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/07 00:02:24 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*p_sleep(t_philo *philo)
 	if (check_stop_flag(philo->data))
 		return (NULL);
 	pthread_mutex_lock(&philo->data->print);
-	printf("%ld %ld is spleeping\n",
+	printf("%ld %ld is sleeping\n",
 		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
 	if (check_stop_flag(philo->data))
