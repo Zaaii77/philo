@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 09:13:56 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/07 00:02:24 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:34:41 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ void	*p_eat(t_philo *philo)
 		return (NULL);
 	if (!lock_and_print(&philo->r_fork->fork, philo))
 		return (pthread_mutex_unlock(&philo->l_fork->fork), NULL);
-	pthread_mutex_lock(&philo->data->eating);
-	philo->is_eating = 1;
-	pthread_mutex_unlock(&philo->data->eating);
 	pthread_mutex_lock(&philo->data->print);
 	printf("%ld %ld is eating\n", (gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
@@ -47,9 +44,6 @@ void	*p_eat(t_philo *philo)
 	philo->lst_meal = gettime();
 	pthread_mutex_unlock(&philo->data->last);
 	optiusleep(philo->data->time_to_eat, gettime(), philo);
-	pthread_mutex_lock(&philo->data->eating);
-	philo->is_eating = 0;
-	pthread_mutex_unlock(&philo->data->eating);
 	pthread_mutex_unlock(&philo->l_fork->fork);
 	pthread_mutex_unlock(&philo->r_fork->fork);
 	return (NULL);
@@ -62,8 +56,6 @@ void	*routine(t_philo *philo)
 	while (!check_stop_flag(philo->data))
 	{
 		p_eat(philo);
-		if (philo->meal_nb == philo->data->meal_nb)
-			break ;
 		p_sleep(philo);
 		p_think(philo);
 	}

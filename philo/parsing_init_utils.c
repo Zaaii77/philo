@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:51:42 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/05 20:34:55 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:39:22 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ int	is_dead(t_data *data, int i)
 	int	res;
 
 	res = 0;
-	pthread_mutex_lock(&data->eating);
 	pthread_mutex_lock(&data->last);
-	if (data->philo[i].is_eating == 0
-		&& (gettime() - data->philo[i].lst_meal) >= data->time_to_die)
+	if ((gettime() - data->philo[i].lst_meal) >= data->time_to_die)
 	{
 		set_stop_flag(data, 1);
 		pthread_mutex_lock(&data->print);
@@ -28,7 +26,6 @@ int	is_dead(t_data *data, int i)
 		pthread_mutex_unlock(&data->print);
 		res = 1;
 	}
-	pthread_mutex_unlock(&data->eating);
 	pthread_mutex_unlock(&data->last);
 	return (res);
 }
@@ -64,27 +61,25 @@ void	kill_forks(t_data *data, int len)
 		pthread_mutex_destroy(&data->forks[i].fork);
 		i++;
 	}
-	free(data->forks);
-	data->forks = NULL;
 }
 
 int	check_philos(t_data *data)
 {
-	int			i;
-	static int	j;
+	int	i;
+	int	j;
 
-	i = -1;
 	j = 0;
+	i = -1;
 	while (++i < data->nb_philo)
 	{
 		if (is_dead(data, i))
 			return (1);
 		pthread_mutex_lock(&data->count);
-		if (data->philo[i].meal_nb == data->meal_nb)
+		if (data->philo[i].meal_nb >= data->meal_nb)
 			j++;
 		pthread_mutex_unlock(&data->count);
 	}
-	if (j == data->nb_philo)
+	if (data->meal_nb > 0 && j == data->nb_philo)
 	{
 		set_stop_flag(data, 1);
 		pthread_mutex_lock(&data->print);
