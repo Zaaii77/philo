@@ -39,11 +39,21 @@
 
 ## Example Output
 ```bash
+./philo 2 210 100 100 2
 0 1 has taken a fork
 0 1 has taken a fork
 0 1 is eating
-200 1 is sleeping
-400 1 is thinking
+100 1 is sleeping
+100 2 has taken a fork
+100 2 has taken a fork
+100 2 is eating
+200 1 is thinking
+200 2 is sleeping
+200 1 has taken a fork
+200 1 has taken a fork
+200 1 is eating
+...
+Nice ! Each philosophers eat 2 time(s) !
 ```
 
 ## Notes
