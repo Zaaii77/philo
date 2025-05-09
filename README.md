@@ -11,7 +11,7 @@
 ## How to Build and Run
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:Zaaii77/philo.git
    cd philo
    ```
 
