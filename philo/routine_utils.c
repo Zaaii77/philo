@@ -6,7 +6,7 @@
 /*   By: lowatell <lowatell@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 01:28:43 by lowatell          #+#    #+#             */
-/*   Updated: 2025/05/08 18:28:45 by lowatell         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:15:25 by lowatell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	lock_and_print(pthread_mutex_t *mutex, t_philo *philo)
 	}
 	pthread_mutex_lock(&philo->data->print);
 	if (check_stop_flag(philo->data))
-			return (pthread_mutex_unlock(&philo->data->print), 1);
+		return (pthread_mutex_unlock(&philo->data->print), 1);
 	printf("%ld %ld has taken a fork\n",
 		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
