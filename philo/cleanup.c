@@ -12,6 +12,14 @@
 
 #include "philo.h"
 
+void	unlock_forks(t_philo *philo, int i)
+{
+	pthread_mutex_unlock(&philo->r_fork->fork);
+	pthread_mutex_unlock(&philo->l_fork->fork);
+	if (i == 1)
+		pthread_mutex_unlock(&philo->data->print);
+}
+
 void	*one_case(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->l_fork->fork);

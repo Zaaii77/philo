@@ -86,5 +86,6 @@ int					check_philos(t_data *data);
 void				data_mutex(t_data *data, int i);
 void				cleanup(t_data *data);
 void				*one_case(t_philo *philo);
+void				unlock_forks(t_philo *philo, int i);
 
 #endif

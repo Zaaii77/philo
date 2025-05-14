@@ -14,9 +14,9 @@
 
 void	*p_sleep(t_philo *philo)
 {
-	if (check_stop_flag(philo->data))
-		return (NULL);
 	pthread_mutex_lock(&philo->data->print);
+	if (check_stop_flag(philo->data))
+		return (pthread_mutex_unlock(&philo->data->print), NULL);
 	printf("%ld %ld is sleeping\n",
 		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
@@ -35,6 +35,8 @@ void	*p_eat(t_philo *philo)
 	if (!lock_and_print(&philo->r_fork->fork, philo))
 		return (pthread_mutex_unlock(&philo->l_fork->fork), NULL);
 	pthread_mutex_lock(&philo->data->print);
+	if (check_stop_flag(philo->data))
+		return (unlock_forks(philo, 1), NULL);
 	printf("%ld %ld is eating\n", (gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
 	pthread_mutex_lock(&philo->data->last);

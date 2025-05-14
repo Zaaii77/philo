@@ -14,9 +14,9 @@
 
 void	*p_think(t_philo *philo)
 {
-	if (check_stop_flag(philo->data))
-		return (NULL);
 	pthread_mutex_lock(&philo->data->print);
+	if (check_stop_flag(philo->data))
+		return (pthread_mutex_unlock(&philo->data->print), NULL);
 	printf("%ld %ld is thinking\n",
 		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
@@ -60,6 +60,8 @@ int	lock_and_print(pthread_mutex_t *mutex, t_philo *philo)
 		return (0);
 	}
 	pthread_mutex_lock(&philo->data->print);
+	if (check_stop_flag(philo->data))
+			return (pthread_mutex_unlock(&philo->data->print), 1);
 	printf("%ld %ld has taken a fork\n",
 		(gettime() - philo->data->s_time), philo->id);
 	pthread_mutex_unlock(&philo->data->print);
