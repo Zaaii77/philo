@@ -35,15 +35,23 @@ void	data_mutex(t_data *data, int i)
 static int	init_mutex(t_data *data)
 {
 	if (pthread_mutex_init(&data->count, NULL))
-		return (data->count_init = 1, data_mutex(data, 1), 1);
+		return (data_mutex(data, 1), 1);
+	data->count_init = 1;
+
 	if (pthread_mutex_init(&data->print, NULL))
-		return (data->print_init = 1, data_mutex(data, 1), 1);
+		return (data_mutex(data, 1), 1);
+	data->print_init = 1;
+
 	if (pthread_mutex_init(&data->stop, NULL))
-		return (data->stop_init = 1, data_mutex(data, 1), 1);
+		return (data_mutex(data, 1), 1);
+	data->stop_init = 1;
+
 	if (pthread_mutex_init(&data->last, NULL))
-		return (data->last_init = 1, data_mutex(data, 1), 1);
+		return (data_mutex(data, 1), 1);
+	data->last_init = 1;
+
 	return (0);
-}
+	}
 
 static int	init_philos(t_data *data)
 {
